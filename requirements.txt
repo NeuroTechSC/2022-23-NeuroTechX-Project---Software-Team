@@ -1,0 +1,5 @@
+flask[async] # web server
+flask_cors # allow js access
+grequests # async requests
+pymongo
+python-dotenv # env vars
