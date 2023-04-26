@@ -21,24 +21,22 @@ def hello_world():
 @app.route('/export')
 def export_data():
     # Grabbing the data from MongoDB
-    data = collection.find()
+    data = collection.find({})
      #Writing to a CSV File
-    display = BytesIO()
-    writer  = csv.writer(display)
-    for text in data:
-        writer.writerow([text['_id'], text['name']])
-    with open("data.csv", "wb") as f:
-        f.write(display.getbuffer())
+    with open("data.csv", "w") as f:
+        csvwriter = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for item in data:
+            print(item)
+            csvwriter.writerow([item['name'], item['_id']])
     #Close CSV file to user
-    display.seek(0)
     return send_file('data.csv', as_attachment=True)
 
 
 if __name__ == '__main__':
     print(client.list_database_names())
     print("\n\n\n")
-    db = client["testdb"]
-    coll = db["testcoll"]
+    db = client["mydatabase"]
+    coll = db["mycollection"]
     post1 = {"name": "hello"}
     coll.insert_one(post1)
     results = coll.find({})
