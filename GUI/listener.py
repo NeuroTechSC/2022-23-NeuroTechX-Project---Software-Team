@@ -1,14 +1,16 @@
 import socket
 import json
-import signal
-import sys
-import asyncio
-import functools
+import threading
+from helper import *
 
-def keyboardInterrupt_handler(sock, loop, sig, frame):
-    loop = False
-    print("KeyboardInterrupt: Closing Socket")
-    
+class socket_thread_c(threading.Thread):
+    def __init__(self, threadID):
+      threading.Thread.__init__(self)
+      self.threadID = threadID
+      self.start()
+    def run(self):
+      init_socket_listener(HOST, PORT, buffer)
+
 def init_socket_listener(HOST, PORT, message_buffer) -> None:
     # Create Socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,12 +22,13 @@ def init_socket_listener(HOST, PORT, message_buffer) -> None:
     sock.bind((HOST, PORT))
     sock.listen()
 
-    buffer = b''
+    request_buffer = b''
     while loop:
         # Wait for client to connect
         try:
             conn, _ = sock.accept()
         except KeyboardInterrupt:
+            print("Closing socket...")
             if conn:
                 conn.close()
             loop = False
@@ -38,21 +41,17 @@ def init_socket_listener(HOST, PORT, message_buffer) -> None:
             if not data:
                 break
 
-            buffer += data
-            messages = buffer.split(b'\n')
+            request_buffer += data
+            messages = request_buffer.split(b'\n')
 
             # Process each message
             for message in messages[:-1]:
                 json_data = json.loads(message)
-                message_buffer.append(json_data)
+                buffer_push(message_buffer, json_data)
                 print(f"SOCKET LOG:\tJson Data Received: {json_data}")
 
-            buffer = messages[-1]
+            request_buffer = messages[-1]
         # Close connection
         conn.close()
 
     sock.close()
-
-if __name__ == "__main__":
-    buff = []
-    init_socket_listener('localhost', 8080, buff)
