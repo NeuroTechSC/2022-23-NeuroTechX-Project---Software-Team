@@ -32,12 +32,15 @@ class gui_c(threading.Thread):
         self.itemstr = tk.StringVar()
         self.itemstr.set("None")
         self.item = tk.Label(self.root, textvariable=self.itemstr, font=('Arial', 18))
+        self.item.pack()
 
     def update(self):
         item = None
-        with lock:
-            current_item = buffer_pop(buffer)
-        self.itemstr.set(str(current_item))
+        self.i += 1
+        self.string.set(self.i)
+        current_item = buffer_pop(buffer)
+        if current_item != None:
+            self.itemstr.set((current_item))
         self.root.after(200, self.update)
         return
     

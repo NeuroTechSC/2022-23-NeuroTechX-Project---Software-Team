@@ -20,7 +20,7 @@ def buffer_pop(buffer):
 
         if len(buffer) != 0:
             json_ret = buffer[0]
-            buffer = buffer[1:]
+            del buffer[0]
     return json_ret
 
 if __name__ == "__main__":
