@@ -14,6 +14,7 @@ def buffer_push(buffer, item):
     with lock:
         buffer.append(item)
     return
+
 def buffer_pop(buffer):
     json_ret = None
     with lock:

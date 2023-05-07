@@ -18,7 +18,10 @@ class gui_c(threading.Thread):
         self.i = 0
 
         self.root = tk.Tk()
-        self.currentItem = None
+
+        # YOUR CODE BELOW
+
+
 
         self.string = tk.StringVar()
         self.string.set("Hello, World!")
@@ -35,13 +38,18 @@ class gui_c(threading.Thread):
         self.item.pack()
 
     def update(self):
-        item = None
         self.i += 1
         self.string.set(self.i)
         current_item = buffer_pop(buffer)
         if current_item != None:
-            self.itemstr.set((current_item))
-        self.root.after(200, self.update)
+            self.itemstr.set(current_item)
+
+
+
+
+
+        # Keep this last
+        self.root.after(1, self.update)
         return
     
     def run(self):

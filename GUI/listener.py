@@ -9,49 +9,56 @@ class socket_thread_c(threading.Thread):
       self.threadID = threadID
       self.start()
     def run(self):
-      init_socket_listener(HOST, PORT, buffer)
+        self.init_socket_listener(HOST, PORT, buffer)
 
-def init_socket_listener(HOST, PORT, message_buffer) -> None:
-    # Create Socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Loop Boolean
-    loop = True
+    def init_socket_listener(self, HOST, PORT, message_buffer) -> None:
+        # Create Socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Bind Socket to host:port and start listening
-    sock.bind((HOST, PORT))
-    sock.listen()
+        # Loop Boolean
+        loop = True
 
-    request_buffer = b''
-    while loop:
-        # Wait for client to connect
-        try:
-            conn, _ = sock.accept()
-        except KeyboardInterrupt:
-            print("Closing socket...")
-            if conn:
-                conn.close()
-            loop = False
-            break
-        print('SOCKET LOG:\tClient Connected, Receiving Data\n')
+        # Bind Socket to host:port and start listening
+        sock.bind((HOST, PORT))
+        sock.listen()
 
-        # Receive Data
+        request_buffer = b''
         while loop:
-            data = conn.recv(1024)
-            if not data:
+            # Wait for client to connect
+            try:
+                conn, _ = sock.accept()
+            except KeyboardInterrupt:
+                print("Closing socket...")
+                if conn:
+                    conn.close()
+                loop = False
                 break
+            print('SOCKET LOG:\tClient Connected, Receiving Data\n')
 
-            request_buffer += data
-            messages = request_buffer.split(b'\n')
+            # Receive Data
+            try:
+                while loop:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
 
-            # Process each message
-            for message in messages[:-1]:
-                json_data = json.loads(message)
-                buffer_push(message_buffer, json_data)
-                print(f"SOCKET LOG:\tJson Data Received: {json_data}")
+                    request_buffer += data
+                    messages = request_buffer.split(b'\n')
 
-            request_buffer = messages[-1]
-        # Close connection
-        conn.close()
+                    # Process each message
+                    for message in messages[:-1]:
+                        json_data = json.loads(message)
+                        buffer_push(message_buffer, json_data)
+                        print(f"SOCKET LOG:\tJson Data Received: {json_data}")
 
-    sock.close()
+                    request_buffer = messages[-1]
+            except KeyboardInterrupt:
+                print("Closing socket...")
+                if conn:
+                    conn.close()
+                loop = False
+            # Close connection
+            conn.close()
+
+        sock.close()
