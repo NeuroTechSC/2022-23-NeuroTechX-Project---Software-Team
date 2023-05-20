@@ -47,7 +47,6 @@ class gui_c(threading.Thread):
 
 
 
-
         # Keep this last
         self.root.after(1, self.update)
         return
