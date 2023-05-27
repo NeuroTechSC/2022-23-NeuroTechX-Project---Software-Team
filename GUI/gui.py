@@ -5,6 +5,8 @@ from typing import Any
 from listener import *
 from helper import *
 import threading
+from component import checkPhoneme
+
 
 def click(stringVar):
     stringVar.set("Hello, Another!")
@@ -43,7 +45,7 @@ class gui_c(threading.Thread):
         current_item = buffer_pop(buffer)
         if current_item != None:
             self.itemstr.set(current_item)
-
+            checkPhoneme.check(self,current_item)
 
 
 
