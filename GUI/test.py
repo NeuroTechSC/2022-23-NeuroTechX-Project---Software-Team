@@ -13,7 +13,7 @@ def generate_random_object() -> dict:
     data = {
         'phoneme': random.randrange(0, 5),
         'image_encoded': "some_random_bytes",
-        'time': int(round(time.time() * 1000)) # time in miliseconds since epoch (Jan 1 1970) UTC
+        'time': int(round(time.time() * 1000)) # time in miliseconds since unix epoch (Jan 1 1970) UTC
     }
     return data
 
