@@ -6,6 +6,5 @@ services:
     image: mongo
     tty: true
     stdin_open: true
-    restart: always
     ports:
       - '27017:27017'

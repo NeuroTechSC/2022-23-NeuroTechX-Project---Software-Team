@@ -1,12 +1,11 @@
-import asyncio
 import threading
-import json
-import time
 HOST = 'localhost'
 PORT = 8080
 
+## GLOBALS
 buffer = []
 current_item = None
+button_state = 'stopped'
 
 lock = threading.Lock()
 
@@ -24,6 +23,14 @@ def buffer_pop(buffer):
             del buffer[0]
     return json_ret
 
-if __name__ == "__main__":
-    buff = []
-    buffer_push(buff, 3)
+lock2 = threading.Lock()
+def toggleButton():
+    with lock2:
+        if button_state == 'running':
+            button_state = 'stopped'
+        else:
+            button_state = 'running'
+
+def readButton():
+    with lock2:
+        return button_state

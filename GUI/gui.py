@@ -1,10 +1,9 @@
-from collections.abc import Callable, Iterable, Mapping
-import tkinter as tk
-import time
-from typing import Any
-from listener import *
+import Tkinter as tk
 from helper import *
 import threading
+from sidebarFrame import SidebarFrame
+from predictionFrame import predictionFrame
+from bottomFrame import BottomFrame
 
 def click(stringVar):
     stringVar.set("Hello, Another!")
@@ -18,34 +17,18 @@ class gui_c(threading.Thread):
         self.i = 0
 
         self.root = tk.Tk()
+        self.root.title("EMG Phoneme Prediction")
+        self.root.geometry("1024x720")
+        self.root.grid_propagate(False)
 
-        # YOUR CODE BELOW
+        # Sidebar Frame
+        sidebar = SidebarFrame(self.root)
 
+        predictionFrames = predictionFrame(self.root)
 
-
-        self.string = tk.StringVar()
-        self.string.set("Hello, World!")
-
-        self.label = tk.Label(self.root, textvariable=self.string, font=('Arial', 18))
-        self.label.pack()
-
-        self.button = tk.Button(self.root, text="Click", command=lambda: click(self.string))
-        self.button.pack()
-
-        self.itemstr = tk.StringVar()
-        self.itemstr.set("None")
-        self.item = tk.Label(self.root, textvariable=self.itemstr, font=('Arial', 18))
-        self.item.pack()
+        bottomFrame = BottomFrame(self.root)
 
     def update(self):
-        self.i += 1
-        self.string.set(self.i)
-        current_item = buffer_pop(buffer)
-        if current_item != None:
-            self.itemstr.set(current_item)
-
-
-
 
 
         # Keep this last
